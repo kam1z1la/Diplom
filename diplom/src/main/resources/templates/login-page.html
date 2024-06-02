@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Security Example</title>
+    <link rel="stylesheet" href="./css/error.css">
+</head>
+
+<div th:if="${success}">
+    <div class="success-msg">
+        <i class="fa fa-check"></i>
+        You have successfully completed registration
+    </div>
+</div>
+
+<div th:if="${param.error}">
+    <div class="error-msg">
+        <i class="fa fa-times-circle"></i>
+        <span>Invalid username and password.</span>
+    </div>
+</div>
+
+<div th:if="${param.logout}">
+    You have been logged out.
+</div>
+
+<form th:action="@{/login-auth}"  method="post"  id="login-form" >
+    <h2>Увійти</h2>
+    <form>
+
+        <div class="user-box">
+            <input type="text" name="mail" >
+            <label>Ел.адреса</label>
+        </div>
+
+        <div class="user-box">
+            <input type="password" name="name">
+            <label>Пароль</label>
+        </div>
+
+        <div><input type="submit" value="Увійти"/></div>
+    </form>
+
+    <div class="ui message">
+        <p class="newToUs_text">New to us?</p>
+        <a class="signup_button" th:href="@{/registration-page}">Sign Up</a>
+    </div>
+
+</form>
+</html>

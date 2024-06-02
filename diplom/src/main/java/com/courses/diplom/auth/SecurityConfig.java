@@ -1,0 +1,102 @@
+package com.courses.diplom.auth;
+
+import com.courses.diplom.db.DetailsServiceConfig;
+import com.courses.diplom.db.account.user.DetailsService;
+import com.courses.diplom.db.account.user.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final DetailsService detailsService;
+    private final Logout logout;
+
+    @Bean
+    @Order(0)
+    SecurityFilterChain resources(HttpSecurity http) throws Exception {
+        return http
+                .securityMatcher("/images/**", "/js/**", "/css/**", "/**.css", "/**.js")
+                .authorizeHttpRequests(c -> c.anyRequest().permitAll())
+                .securityContext(AbstractHttpConfigurer::disable)
+                .sessionManagement(AbstractHttpConfigurer::disable)
+                .requestCache(RequestCacheConfigurer::disable)
+                .build();
+    }
+
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(
+                        request -> {
+                            request.requestMatchers(
+                                    "/auth/login",
+                                    "/api/signin"
+                            ).permitAll();
+                             request.requestMatchers("/footer")
+                                    .permitAll()
+                                    .anyRequest()
+                                    .authenticated();
+                        })
+                .logout(log -> log.logoutSuccessHandler(logout))
+                .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
+                .authenticationProvider(authenticationProvider()).addFilterBefore(
+                        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(detailsService.userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
+        return config.getAuthenticationManager();
+    }
+}
+
+
+
+//        return http
+//                .authorizeHttpRequests((requests) -> requests
+//                        .requestMatchers("/").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .formLogin((form) -> form
+//                        .loginPage("/login")
+//                        .usernameParameter("mail")
+//                        .passwordParameter("password")
+//                        .loginProcessingUrl("/authenticate")
+//                        .defaultSuccessUrl("/registration")
+//                        .permitAll()
+//                )
+//                .logout((logout) -> logout.permitAll())
+//                .build();

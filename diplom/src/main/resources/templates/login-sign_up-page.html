@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&family=Vina+Sans&display=swap');
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Roboto, -apple-system, 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
+            background: white;
+        }
+
+        .forms-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 32px;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .forms {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 30px;
+        }
+
+        .form-wrapper {
+            animation: hideLayer .3s ease-out forwards;
+        }
+
+        .form-wrapper.is-active {
+            animation: showLayer .3s ease-in forwards;
+        }
+
+        @keyframes showLayer {
+            50% {
+                z-index: 1;
+            }
+            100% {
+                z-index: 1;
+            }
+        }
+
+        @keyframes hideLayer {
+            0% {
+                z-index: 1;
+            }
+            49.999% {
+                z-index: 1;
+            }
+        }
+
+        .switcher {
+            position: relative;
+            cursor: pointer;
+            display: block;
+            margin-right: auto;
+            margin-left: auto;
+            padding: 0;
+            text-transform: uppercase;
+            font-family: inherit;
+            font-size: 16px;
+            letter-spacing: .5px;
+            color: #999;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            transform: translateX(0);
+            transition: all .3s ease-out;
+        }
+
+        .form-wrapper.is-active .switcher-login {
+            color: #fff;
+            transform: translateX(90px);
+        }
+
+        .form-wrapper.is-active .switcher-signup {
+            color: #fff;
+            transform: translateX(-90px);
+        }
+
+        .underline {
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            overflow: hidden;
+            pointer-events: none;
+            width: 100%;
+            height: 2px;
+        }
+
+        .underline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: inherit;
+            display: block;
+            width: inherit;
+            height: inherit;
+            background-color: currentColor;
+            transition: transform .2s ease-out;
+        }
+
+        .switcher-login .underline::before {
+            transform: translateX(101%);
+        }
+
+        .switcher-signup .underline::before {
+            transform: translateX(-101%);
+        }
+
+        .form-wrapper.is-active .underline::before {
+            transform: translateX(0);
+        }
+
+        .form {
+            overflow: hidden;
+            min-width: 260px;
+            margin-top: 50px;
+            padding: 30px 25px;
+            border-radius: 5px;
+            transform-origin: top;
+            row-gap: 2.5em;
+            min-height: 25em;
+            box-shadow: 3px 3px 3px 2px rgba(33, 29, 29, 0.2);
+        }
+
+        .form-login {
+            animation: hideLogin .3s ease-out forwards;
+        }
+
+        .form-wrapper.is-active .form-login {
+            animation: showLogin .3s ease-in forwards;
+        }
+
+        @keyframes showLogin {
+            0% {
+                background: #d7e7f1;
+                transform: translate(40%, 10px);
+            }
+            50% {
+                transform: translate(0, 0);
+            }
+            100% {
+                background-color: #fff;
+                transform: translate(35%, -20px);
+            }
+        }
+
+        @keyframes hideLogin {
+            0% {
+                background-color: #fff;
+                transform: translate(35%, -20px);
+            }
+            50% {
+                transform: translate(0, 0);
+            }
+            100% {
+                background: #d7e7f1;
+                transform: translate(40%, 10px);
+            }
+        }
+
+        .form-signup {
+            animation: hideSignup .3s ease-out forwards;
+        }
+
+        .form-wrapper.is-active .form-signup {
+            animation: showSignup .3s ease-in forwards;
+        }
+
+        @keyframes showSignup {
+            0% {
+                background: #d7e7f1;
+                transform: translate(-40%, 10px) scaleY(.8);
+            }
+            50% {
+                transform: translate(0, 0) scaleY(.8);
+            }
+            100% {
+                background-color: #fff;
+                transform: translate(-35%, -20px) scaleY(1);
+            }
+        }
+
+        @keyframes hideSignup {
+            0% {
+                background-color: #fff;
+                transform: translate(-35%, -20px) scaleY(1);
+            }
+            50% {
+                transform: translate(0, 0) scaleY(.8);
+            }
+            100% {
+                background: #d7e7f1;
+                transform: translate(-40%, 10px) scaleY(.8);
+            }
+        }
+
+        .form fieldset {
+            position: relative;
+            opacity: 0;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            transition: all .3s ease-out;
+        }
+
+        .form-login fieldset {
+            transform: translateX(-50%);
+        }
+
+        .form-signup fieldset {
+            transform: translateX(50%);
+        }
+
+        .form-wrapper.is-active fieldset {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity .4s ease-in, transform .35s ease-in;
+        }
+
+        .form legend {
+            position: absolute;
+            overflow: hidden;
+            width: 1px;
+            height: 1px;
+            clip: rect(0 0 0 0);
+        }
+
+        .input-block {
+            margin-bottom: 20px;
+        }
+
+        .input-block label {
+            font-size: 14px;
+            color: #a1b4b4;
+        }
+
+        .input-block input {
+            width: 100%;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #090909;
+            margin-bottom: 30px;
+            border: none;
+            border-bottom: 1px solid #181818;
+            outline: none;
+            background: transparent;
+        }
+
+        .form [type='submit'] {
+            opacity: 0;
+            display: block;
+            min-width: 120px;
+            margin: 30px auto 10px;
+            font-size: 18px;
+            line-height: 40px;
+            border-radius: 25px;
+            border: none;
+            transition: all .3s ease-out;
+        }
+
+        .form-wrapper.is-active .form [type='submit'] {
+            opacity: 1;
+            transform: translateX(0);
+            transition: all .4s ease-in;
+        }
+
+        .btn-login {
+            color: #fbfdff;
+            background: #a7e245;
+            transform: translateX(-30%);
+        }
+
+        .btn-signup {
+            color: #a7e245;
+            background: #fbfdff;
+            box-shadow: inset 0 0 0 2px #a7e245;
+            transform: translateX(30%);
+        }
+
+        /* Animation for button span */
+        .form a span:nth-child(1) {
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #03e9f4);
+            animation: btn-anim1 1s linear infinite;
+        }
+
+        @keyframes btn-anim1 {
+            0% {
+                left: -100%;
+            }
+            50%, 100% {
+                left: 100%;
+            }
+        }
+
+        .form a span:nth-child(2) {
+            top: -100%;
+            right: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, transparent, #03e9f4);
+            animation: btn-anim2 1s linear infinite;
+            animation-delay: .25s
+        }
+
+        @keyframes btn-anim2 {
+            0% {
+                top: -100%;
+            }
+            50%, 100% {
+                top: 100%;
+            }
+        }
+
+        .form a span:nth-child(3) {
+            bottom: 0;
+            right: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(270deg, transparent, #03e9f4);
+            animation: btn-anim3 1s linear infinite;
+            animation-delay: .5s
+        }
+
+        @keyframes btn-anim3 {
+            0% {
+                right: -100%;
+            }
+            50%, 100% {
+                right: 100%;
+            }
+        }
+
+        .form a span:nth-child(4) {
+            bottom: -100%;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(360deg, transparent, #03e9f4);
+            animation: btn-anim4 1s linear infinite;
+            animation-delay: .75s
+        }
+
+        @keyframes btn-anim4 {
+            0% {
+                bottom: -100%;
+            }
+            50%, 100% {
+                bottom: 100%;
+            }
+        }
+
+
+        .password_content {
+            display: flex;
+            flex-direction: column;
+            row-gap: var(--rowGap_input_and_text);
+        }
+        .password_input_text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .password_input_p {
+            display: flex;
+            padding-top: var(--rowGap_input_and_text);
+            column-gap: 0.2em;
+            margin-left: auto;
+        }
+
+        .password_input_p {
+            display: flex;
+            padding-top: var(--rowGap_input_and_text);
+            column-gap: 0.2em;
+            margin-left: auto;
+        }
+
+        .passwordText_and_checkbox {
+            display: flex;
+        }
+
+        .css-checkbox {
+            position: absolute; overflow: hidden; clip: rect(0 0 0 0);
+            height: 1px; width: 1px; margin: -1px; padding: 0; border: 0; }
+        #inputPreview {
+            display: flex; gap: 20px; justify-content: center;
+        }
+        .css-checkbox + label {
+            position: relative; font-size: 14px; cursor: pointer;
+            display: inline-flex; align-items: center; height: 18px;
+            color: #fff;
+        }
+        .css-checkbox + label::before {
+            content: " "; display: inline-block;
+            vertical-align: middle; margin-right: 3px;
+            width: 18px; height: 18px; background-color: white;
+            border-width: 1px; border-style: solid;
+            border-color: rgb(20, 20, 23); border-radius: 10px;
+            box-shadow: none;
+        }
+        .css-checkbox:checked + label::after {
+            content: " ";
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjMTc0MmIwIiBkPSJNMTczLjg5OCA0MzkuNDA0bC0xNjYuNC0xNjYuNGMtOS45OTctOS45OTctOS45OTctMjYuMjA2IDAtMzYuMjA0bDM2LjIwMy0zNi4yMDRjOS45OTctOS45OTggMjYuMjA3LTkuOTk4IDM2LjIwNCAwTDE5MiAzMTIuNjkgNDMyLjA5NSA3Mi41OTZjOS45OTctOS45OTcgMjYuMjA3LTkuOTk3IDM2LjIwNCAwbDM2LjIwMyAzNi4yMDRjOS45OTcgOS45OTcgOS45OTcgMjYuMjA2IDAgMzYuMjA0bC0yOTQuNCAyOTQuNDAxYy05Ljk5OCA5Ljk5Ny0yNi4yMDcgOS45OTctMzYuMjA0LS4wMDF6Ii8+PC9zdmc+");
+            background-repeat: no-repeat; background-size: 12px 12px;
+            background-position: center center; position: absolute;
+            display: flex; justify-content: center; align-items: center;
+            margin-left: 0px; left: 0px; top: 0px; text-align: center;
+            background-color: transparent; font-size: 10px; height: 18px; width: 18px;
+        }
+    </style>
+
+</head>
+<body>
+<section class="forms-section">
+
+    <div class="forms">
+        <div class="form-wrapper is-active">
+            <button type="button" class="switcher switcher-login">Увійти<span class="underline"></span></button>
+
+            <!--            LOGIN PAGE-->
+            <form class="form form-login" th:action="@{/signin}" method="post"
+                  th:object="${signIn}" id="login-form">
+                <fieldset>
+                    <legend>Please, enter your email and password for login.</legend>
+                    <div class="input-block">
+                        <label for="login-email">E-mail</label>
+                        <input id="login-email" type="email" th:field="*{email}" name="mail" required>
+                    </div>
+
+                    <div class="password_content">
+                        <div class="passwordText_and_checkbox">
+                            <div class="password_input_p">
+                                <div id="inputPreview">
+                                    <input name="cssCheckbox" id="demo_opt_1" type="checkbox" class="css-checkbox"
+                                           onclick="showPassword('login-password')">
+                                    <label for="demo_opt_1">
+                                        <p>Show Password</p>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-block">
+                            <label for="login-password">Password</label>
+                            <input id="login-password" type="password" th:field="*{password}" name="password" required>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <div><input type="submit" value="Увійти"/></div>
+            </form>
+
+        </div>
+        <div class="form-wrapper">
+            <button type="button" class="switcher switcher-signup">Зареєструватися<span class="underline"></span></button>
+
+            <form class="form form-signup">
+                <fieldset>
+                    <legend>Please, enter your email, password and password confirmation for sign up.</legend>
+                    <div class="input-block">
+                        <label for="signup-email">Full name</label>
+                        <input id="signup-name" type="email" required>
+                    </div>
+                    <div class="input-block">
+                        <label for="signup-email">E-mail</label>
+                        <input id="signup-email" type="email" required>
+                    </div>
+                    <div class="input-block">
+                        <label for="signup-password">Password</label>
+                        <input id="signup-password" type="password" required>
+                    </div>
+                    <div class="input-block">
+                        <label for="signup-password-confirm">Confirm password</label>
+                        <input id="signup-password-confirm" type="password" required>
+                    </div>
+                </fieldset>
+                <button type="submit" class="btn-signup">Continue</button>
+            </form>
+
+        </div>
+    </div>
+</section>
+
+<script>
+    function showPassword(inputId) {
+        let x = document.getElementById(inputId);
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
+</script>
+
+<script>
+    const switchers = [...document.querySelectorAll('.switcher')]
+
+    switchers.forEach(item => {
+        item.addEventListener('click', function () {
+            switchers.forEach(item => item.parentElement.classList.remove('is-active'))
+            this.parentElement.classList.add('is-active')
+        })
+    })
+</script>
+</body>
+</html>
