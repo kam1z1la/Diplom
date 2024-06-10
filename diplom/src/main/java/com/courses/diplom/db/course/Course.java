@@ -2,10 +2,13 @@ package com.courses.diplom.db.course;
 
 import com.courses.diplom.db.module.Module;
 import com.courses.diplom.db.account.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Entity
@@ -14,20 +17,18 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "course")
-@NamedEntityGraph(
-        name = "course-entity-graph",
-        attributeNodes = {
-                @NamedAttributeNode("category"),
-                @NamedAttributeNode("users"),
-                @NamedAttributeNode("experts"),
-                @NamedAttributeNode("modules"),
-                @NamedAttributeNode("audiences")
-        }
-)
+//@NamedEntityGraphs({
+//        @NamedEntityGraph(
+//                name = "course-category-graph",
+//                attributeNodes = {
+//                        @NamedAttributeNode("category")
+//                }
+//        )
+//})
 @Builder
 public class Course {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 200)
@@ -36,7 +37,7 @@ public class Course {
     @Column(nullable = false)
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -46,13 +47,13 @@ public class Course {
     @Column(name = "is_paid")
     private boolean isPaid;
 
-    private DecimalFormat price;
+    private BigDecimal price;
 
     @ManyToMany(mappedBy = "courses")
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "course")
-    private List<Module> modules = new LinkedList<>();
+    private Set<Module> modules = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
@@ -60,7 +61,7 @@ public class Course {
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "experts_id")
     )
-    private List<Expert> experts = new ArrayList<>();
+    private Set<Expert> experts = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(

@@ -5,6 +5,7 @@ import com.courses.diplom.db.account.user.DetailsService;
 import com.courses.diplom.db.account.user.UserService;
 import com.courses.diplom.db.account.user.dto.SignIn;
 import com.courses.diplom.db.account.user.dto.SignUp;
+import com.courses.diplom.exiption.UserExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,8 +21,11 @@ public class AuthenticationSService implements AuthenticationS {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public JwtAuthenticationResponse signup(SignUp request) {
+    public JwtAuthenticationResponse signup(SignUp request) throws UserExistException {
         var user = userService.signUpToEntity(request);
+        if (userService.isUserExist(user.getMail())) {
+            throw new UserExistException("User exist");
+        }
         userService.saveUser(user);
 
         String token = tokenService.generateToken(user);

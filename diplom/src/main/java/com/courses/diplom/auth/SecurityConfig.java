@@ -1,8 +1,6 @@
 package com.courses.diplom.auth;
 
-import com.courses.diplom.db.DetailsServiceConfig;
 import com.courses.diplom.db.account.user.DetailsService;
-import com.courses.diplom.db.account.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,7 +47,7 @@ public class SecurityConfig {
                         request -> {
                             request.requestMatchers(
                                     "/auth/login",
-                                    "/api/signin"
+                                    "/api/**"
                             ).permitAll();
                              request.requestMatchers("/footer")
                                     .permitAll()
@@ -82,21 +80,3 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 }
-
-
-
-//        return http
-//                .authorizeHttpRequests((requests) -> requests
-//                        .requestMatchers("/").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin((form) -> form
-//                        .loginPage("/login")
-//                        .usernameParameter("mail")
-//                        .passwordParameter("password")
-//                        .loginProcessingUrl("/authenticate")
-//                        .defaultSuccessUrl("/registration")
-//                        .permitAll()
-//                )
-//                .logout((logout) -> logout.permitAll())
-//                .build();

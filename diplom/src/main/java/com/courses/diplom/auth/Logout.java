@@ -28,7 +28,6 @@ public class Logout implements LogoutSuccessHandler {
         final String authHeader = request.getHeader("Authorization");
         final String jwt = authHeader.substring(7);
         final String userEmail = tokenService.extractUserName(jwt);
-//        var userDetails = (UserDetails) authentication.getPrincipal();
         var user = (User) detailsService.userDetailsService().loadUserByUsername(userEmail);
         var token = user.getToken();
 

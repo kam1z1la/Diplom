@@ -7,10 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SignUp {
-    private String firstName;
-    private String lastName;
+public class TemporaryUser {
     private String email;
-    private String phoneNumber;
     private String password;
 }

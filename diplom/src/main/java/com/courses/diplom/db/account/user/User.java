@@ -21,7 +21,6 @@ import java.util.*;
         name = "user-entity-graph",
         attributeNodes = {
                 @NamedAttributeNode("roles"),
-                @NamedAttributeNode("courses"),
                 @NamedAttributeNode("experts"),
                 @NamedAttributeNode("token")
         }
@@ -29,7 +28,7 @@ import java.util.*;
 @Builder
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "first_name", nullable = false, length = 30)

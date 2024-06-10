@@ -21,6 +21,6 @@ public class Category {
     @Column(nullable = false, length = 300)
     private String name;
 
-    @OneToMany(mappedBy = "category")
-    private Set<Course> orders = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    private Set<Course> courses = new HashSet<>();
 }

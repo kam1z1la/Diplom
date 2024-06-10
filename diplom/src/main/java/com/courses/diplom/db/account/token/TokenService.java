@@ -1,10 +1,13 @@
 package com.courses.diplom.db.account.token;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.micrometer.common.util.StringUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.http.HttpRequest;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +36,17 @@ public class TokenService implements Jwt {
         Token entity = dto.toEntity();
         tokenRepository.save(entity);
         log.info("Save token success");
+    }
+
+    public String getMailFromHttpRequest(HttpServletRequest request) {
+        var authHeader = request.getHeader("Authorization");
+        var jwt = authHeader.substring(7);
+        return extractUserName(jwt);
+    }
+
+    public Long getCourseIdFromHttpRequest(HttpServletRequest request) {
+        var authHeader = request.getHeader("Course_ID");
+        return Long.parseLong(authHeader);
     }
 
     @Override
