@@ -1,0 +1,5 @@
+ALTER TABLE event DROP COLUMN date;
+
+ALTER TABLE event ADD COLUMN date date;
+ALTER TABLE event ADD COLUMN time time(0) WITHOUT TIME ZONE;
+

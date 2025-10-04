@@ -4,6 +4,10 @@ import com.courses.diplom.db.course.Course;
 import com.courses.diplom.db.course.Expert;
 import com.courses.diplom.db.account.Role;
 import com.courses.diplom.db.account.token.Token;
+import com.courses.diplom.db.module.result.Result;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,14 +22,14 @@ import java.util.*;
 @AllArgsConstructor
 @Table(name = "\"user\"")
 @NamedEntityGraph(
-        name = "user-entity-graph",
+        name = "user-graph",
         attributeNodes = {
                 @NamedAttributeNode("roles"),
-                @NamedAttributeNode("experts"),
                 @NamedAttributeNode("token")
         }
 )
 @Builder
+@JsonIgnoreProperties({"roles", "courses"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,7 +60,11 @@ public class User implements UserDetails {
     @JoinColumn(name = "token_id", referencedColumnName = "id")
     private Token token;
 
-    @ManyToMany(cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "user")
+    @JsonIgnore
+    private Result result;
+
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -64,7 +72,7 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.REMOVE)
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_course",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -72,7 +80,8 @@ public class User implements UserDetails {
     )
     private Set<Course> courses = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Expert> experts = new ArrayList<>();
 
     @Override

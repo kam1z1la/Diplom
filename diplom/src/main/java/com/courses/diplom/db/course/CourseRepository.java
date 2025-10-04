@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
@@ -40,6 +41,10 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query(value = "select count(*) > 0 from user_course where user_id = :userId and course_id = :courseId",
             nativeQuery = true)
     boolean userHasCurrentCourses(Long userId, Long courseId);
+
+    @Query(value = "select count(*) from user_course where user_id = :userId",
+            nativeQuery = true)
+    Optional<Integer> countUserCourses(Long userId);
 
     @Modifying
     @Transactional

@@ -1,10 +1,9 @@
 package com.courses.diplom.db.course;
 
-import com.courses.diplom.db.module.Module;
+import com.courses.diplom.db.course.event.Event;
+import com.courses.diplom.db.module.module.Module;
 import com.courses.diplom.db.account.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -53,6 +52,7 @@ public class Course {
     private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "course")
+    @JsonBackReference
     private Set<Module> modules = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.REMOVE)
@@ -70,4 +70,8 @@ public class Course {
             inverseJoinColumns = @JoinColumn(name = "target_audience_id")
     )
     private Set<TargetAudience> audiences = new HashSet<>();
+
+    @OneToMany(mappedBy = "course")
+    @JsonBackReference
+    private Set<Event> events = new HashSet<>();
 }

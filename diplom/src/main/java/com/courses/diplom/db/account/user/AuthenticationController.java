@@ -24,7 +24,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SignIn request) {
+    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SignIn request) throws UserExistException {
         return ResponseEntity.ok(authenticationService.signin(request));
     }
 }

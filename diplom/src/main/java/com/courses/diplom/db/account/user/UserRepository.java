@@ -1,6 +1,6 @@
 package com.courses.diplom.db.account.user;
 
-import com.courses.diplom.db.course.Course;
+import com.courses.diplom.db.account.user.dto.UserDto;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,5 +34,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             phone_number = :#{#user.phoneNumber}
             where id = :#{#user.id}""",
             nativeQuery = true)
-    void updateUser(User user);
+    void updateUser(UserDto user);
 }

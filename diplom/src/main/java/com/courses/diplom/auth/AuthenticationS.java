@@ -8,5 +8,5 @@ import com.courses.diplom.exiption.UserExistException;
 public interface AuthenticationS {
     JwtAuthenticationResponse signup(SignUp request) throws UserExistException;
 
-    JwtAuthenticationResponse signin(SignIn request);
+    JwtAuthenticationResponse signin(SignIn request) throws UserExistException;
 }
