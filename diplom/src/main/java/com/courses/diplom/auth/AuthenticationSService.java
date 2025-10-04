@@ -33,14 +33,22 @@ public class AuthenticationSService implements AuthenticationS {
     }
 
     @Override
-    public JwtAuthenticationResponse signin(SignIn request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()));
+    public JwtAuthenticationResponse signin(SignIn request) throws UserExistException {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()));
+        } catch (Exception e) {
+            throw new UserExistException("User exist");
+        }
 
         var user = detailsService.userDetailsService().loadUserByUsername(request.getEmail());
         String token = tokenService.generateToken(user);
-        return JwtAuthenticationResponse.builder().token(token).build();
+        return JwtAuthenticationResponse.builder().
+
+                token(token).
+
+                build();
     }
 }

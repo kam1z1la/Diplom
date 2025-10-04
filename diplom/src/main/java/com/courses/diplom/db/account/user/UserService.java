@@ -73,8 +73,7 @@ public class UserService {
     }
 
     public void updateUser(UserDto dto) {
-        User user = findUserById(dto.getId());
-        userRepository.updateUser(user);
+        userRepository.updateUser(dto);
     }
 
     private User findUserById(Long id) {

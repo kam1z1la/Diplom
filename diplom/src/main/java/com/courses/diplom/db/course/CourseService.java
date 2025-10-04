@@ -32,4 +32,8 @@ public class CourseService {
             courseRepository.registerUserToCourse(user.getId(), course.getId());
         }
     }
+
+    public int countingPurchasedCourses(Long userId) {
+        return courseRepository.countUserCourses(userId).orElse(0);
+    }
 }

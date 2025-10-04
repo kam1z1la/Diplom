@@ -1,5 +1,9 @@
-package com.courses.diplom.db.module;
+package com.courses.diplom.db.module.topic;
 
+import com.courses.diplom.db.module.module.Module;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,5 +30,6 @@ public class Topic {
 
     @ManyToOne
     @JoinColumn(name = "module_id")
+    @JsonBackReference
     private Module module;
 }
